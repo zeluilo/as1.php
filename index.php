@@ -19,6 +19,7 @@ session_start();
 		echo "WELCOME, " . $_SESSION['userDetails']['name']  .'!'. '<br>' ." <a href='logout.php'>LOGOUT HERE</a>";
 		if ($_SESSION['userDetails']["checkadmin"] == "ADMIN") {
 			echo "<br><a href='adminCategories.php'class='addcat'><button>Management Panel</button></a>";
+			echo "<br><a href='addAuction.php'class='addcat'><button>Add Auction</button></a>";
 		}
 		else if ($_SESSION['userDetails']["checkadmin"] == "USER") {
 			echo "<br><a href='addAuction.php'class='addcat'><button>Add Auction</button></a>";

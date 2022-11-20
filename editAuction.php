@@ -1,20 +1,23 @@
 <?php
 require 'database.php';
 
-if (isset($_POST['submit'])) {
+if ($_POST) {
 
-    $stmt = $pdo->prepare('UPDATE auction SET title = :title WHERE auctId = :auctId');
+    $stmt = $pdo->prepare('UPDATE auction SET title = :title, description = :description, endDate =:endDate 
+                            WHERE auctId = :auctId');
 
     $endDate = date('Y-m-d H:i:s');
 
     $values = [
         'title' => $_POST['title'],
+        'endDate' => $endDate,
+        'description' => $_POST['description'],
         'auctId' => $_GET['auctId']
     ];
 
     $stmt->execute($values);
     header('Location: index.php');
-    echo 'Category Edited!';
+
 }
 $stmt = $pdo->prepare('SELECT * FROM auction WHERE auctId = :auctId');
 
@@ -30,7 +33,7 @@ $auct = $stmt->fetch();
     <?php require 'head.php'; ?>
     <?php require 'navbar.php'; ?>
     <div class="form">
-        <h1>Add Auction!</h1>
+        <h1>Edit Auction!</h1>
         <form action="" method="POST">
             <br><label>Title</label>
             <input type="text" name="title" value="<?php echo $auct['title']; ?>" />
@@ -41,41 +44,33 @@ $auct = $stmt->fetch();
             <br>
             <select name="categoryId">
                 <?php
-
-                foreach ($auct as $row) {
-                    echo '<option value="' . $auct['categoryId'] . '">' . '</option>';
+                $stmt = $pdo->prepare('SELECT * FROM category');
+                $stmt -> execute();
+                $cate = $stmt -> fetchAll();
+                foreach ($cate as $row) {
+                    if ($row['categoryId'] == $auct['categoryId']) {
+                    $category = 'selected';
+                } else {
+                    $category = '';
                 }
-
-                ?>
+                echo '<option ' . $category . ' value="' . $row['category_id'] . '">' . $row['name'] . '</option>';
+            }
+            ?>
             </select><br>
             <br><label>EndDate</label>
-            <input type="date" name="endDate" value="<?php echo $auct['endDate']; ?>" />
+            <input type="date" id='end' name="endDate" value="<?php $auct['endDate'] ?>" />
             <input class='auct_pic' type="file" name="auct_pic" />
-            <input class='btn' type="submit" name="submit" value="Edit" />
+            <input class='btn' type="submit" name="submit" value="Edit"/>
         </form>
     </div>
     </main>
 </body>
 
 <?php require 'foot.php';?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <style>
         .form {
             position: relative;
-            top: 50%;
+            top: 0%;
             left: 20%;
             width: 60%;
             border-radius: 10px;

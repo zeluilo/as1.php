@@ -12,7 +12,7 @@ JOIN category c
 JOIN user u
     ON u.userId = a.userId
 LEFT JOIN bidding b
-    ON a.userId = u.userId
+    ON a.auctId = b.auctId
 WHERE a.auctId = :auctId
 ");
 $stmt->execute(['auctId' => $_GET['auctId']]);
@@ -27,10 +27,10 @@ $left_time %=  (60 * 60 * 24);
 $hour = floor($left_time / (60 * 60 * 24));
 $left_time %=  (60 * 60);
 
-$minute = floor($left_time / (60 * 60 * 24));
+$minute = floor($left_time / (60));
 $left_time %=  60;
 
-if($minute > 0 ) {
+if($minute > 1 ) {
     $showTime = "$day days and $hour hours and $minute mins";
 } else {
     $showTime = 'Auction Expired';
@@ -52,11 +52,19 @@ if($minute > 0 ) {
     ?>
     <main>
         <?php
+
+        if (isset($_SESSION['userDetails'])){
+            if ($auct['userId'] == $_SESSION['userDetails']["userId"]){
+                echo '<a href="index.php"> . <button class="addcat">Home Page</button></a>';
+                echo '<a href="editAuction.php?auctId=' . $auct['auctId'] . '"><button  class=" "> EDIT AUCITON</button></a>'; 
+                echo '<a href="deleteAuction.php?auctId=' . $auct['auctId'] . '"><button  class=" "> DELETE AUCITON</button></a>';               
+            }
+        }
         $imagePath = ($auct['image']) ? "images/auctions/" . $auct['image'] : "product.png";
         echo
         '<h1>Category Page</h1>  
         <article class="product">
-        <img src="'. $imagePath . '">
+        <img  class="image" src="'. $imagePath . '">
                 <section class="details">
 
                     <h2>Auction: ' . $auct["title"] . '</h2>
@@ -65,7 +73,7 @@ if($minute > 0 ) {
                     <p class="price">Current bid: £' . $auct['bid_amount'] . '</p>
                     <time>Time left: '. $showTime . '</time>
 
-                    <form action="" class="bid" method="POST">
+                    <form action="bidding.php" class="bid" method="POST">
                         <input type="text" name="bid" placeholder="Enter bid amount" />
                         <input type="submit" class="bid_btn" value="Place bid" />
                         <input hidden name="auctId" value="' . $auct['auctId'] . '"/>
@@ -75,7 +83,7 @@ if($minute > 0 ) {
             <section class="description">
                 <p>' . 'Description: ' . $auct["description"] . '</p>'
         ?>
-        <a href="editAuction.php"> <button class="bid_btn">EDIT AUCTION</button></a>
+
         </section>
         <?php require "userReviews.php"; ?>
         <?php require "foot.php"; ?>
@@ -99,6 +107,12 @@ if($minute > 0 ) {
             box-shadow: 0 0 10px rgb(0 0 0 / 10%);
             position: relative;
             margin-top: 15px;
+        }
+        .image{
+            max-width: 200px;
+            position: relative;
+            top: 0;
+            left: 25%;
         }
     </style>
 </body>

@@ -1,6 +1,8 @@
 <?php
 session_start();
 require 'database.php';
+
+
 $stmt = $pdo->prepare('INSERT INTO bidding (bid_amount, auctId, userId) VALUES (:bid_amount, :auctId, :userId)');
 
 $values = [

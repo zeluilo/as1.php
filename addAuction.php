@@ -16,12 +16,12 @@ if ($_POST) {
         $stmt = $pdo->prepare('INSERT INTO auction (title, description, categoryId, endDate, userId, image)
         VALUES (:title, :description, :categoryId, :endDate, :userId, :image)');
 
-        $endDate = date_create($_POST['endDate'])->format("Y-m-d H:i:s");
+
 
         $values = [
             'title' => $_POST['title'],
             'description' => $_POST['description'],
-            'endDate' => $endDate,
+            'endDate' => $_POST['endDate'],
             'categoryId' => $_POST['categoryId'],
             'image' => $_FILES["auct_pic"]["name"],
             'userId' => $_SESSION['userDetails']["userId"]

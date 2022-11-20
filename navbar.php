@@ -9,7 +9,7 @@ require 'database.php';
         $user = $stmt->fetchAll();
 
         foreach ($user as $rows) {
-            echo '<li><a class="categoryLink" href="index.php?id=' . $rows['categoryId'] . '">' . $rows['name'] . '</a></li>';
+            echo '<li><a class="categoryLink" href="index.php?categoryId=' . $rows['categoryId'] . '">' . $rows['name'] . '</a></li>';
         }
         ?>
     </ul>

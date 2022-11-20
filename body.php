@@ -9,13 +9,13 @@ if(isset($_GET['categoryId'])){
 		ON a.categoryId = c.categoryId
 	JOIN user u
 		ON u.userId = a.userId
-	WHERE categoryId = :categoryId");
+	WHERE a.categoryId = :categoryId");
 
 	$stmt -> execute(['categoryId' => $_GET['categoryId']]);
 	$auct = $stmt -> fetchAll();
 }
 
-if (isset($_GET['search'])) {
+else if (isset($_GET['search'])) {
 	$search = "%" . $_GET['search'] ."%";
 	$stmt = $pdo -> prepare("SELECT a.auctId, a.image, a.userId, a.title, a.description, a.categoryId, c.categoryId, c.name
 	AS category_name, u.userId, u.name 
@@ -37,7 +37,7 @@ if (isset($_GET['search'])) {
 		ON a.categoryId = c.categoryId
 	JOIN user u
 		ON a.userId = u.userId
-	LIMIT 10");
+	LIMIT 50");
 	
 	$stmt -> execute();
 	$auct = $stmt -> fetchAll();
@@ -59,7 +59,7 @@ foreach ($auct as $row) {
 		<img src="'. $imagePath . '">
 			<article class="categoryDetails"> 
 				<h2>' . $row['title'] .'</h2>
-				<h3>' . 'Category: ' . $row['name'] . '</h3>
+				<h3>' . 'Category: ' . $row['category_name'] . '</h3>
 				<p>' . $row['description'] . '</p>
 				<p class="price">Current bid: £'. $bidding['bid_amount'] . '</p>
 				<a href="categoryDetails.php?auctId=' . $row['auctId'] . '" class="more auctionLink">More &gt;&gt;</a>

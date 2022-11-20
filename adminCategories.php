@@ -40,6 +40,7 @@ $results = $pdo->query('SELECT * FROM category')->fetchAll();
     </tr>";
         }
         ?>
+        
     </table>
 
 </body>
